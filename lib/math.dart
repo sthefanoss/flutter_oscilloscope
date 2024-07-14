@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:function_tree/function_tree.dart';
+
 final _random = Random();
 
 class Complex {
@@ -43,4 +45,21 @@ List<Complex> fft(List<Complex> x) {
   return result;
 }
 
-double noise() => _random.nextDouble() - 0.5;
+/// Returns a random number between -1 and 1
+double noise() => 2 * _random.nextDouble() - 1;
+
+List<double> generateSamples(
+  SingleVariableFunction function, {
+  required int length,
+  required double xStep,
+  required double noiseLevel,
+  required double initialX,
+}) =>
+    List<double>.generate(
+      length,
+      (i) => function(initialX + i * xStep) + noise() * noiseLevel,
+    );
+
+extension NumericListExtensions on List<num> {
+  List<Complex> asComplexList() => map((e) => Complex(e.toDouble(), 0)).toList();
+}

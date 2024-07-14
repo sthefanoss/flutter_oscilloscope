@@ -59,11 +59,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   void _functionGenerator(Duration duration) {
-    final t = duration.inMicroseconds / 1E6;
     _samplingPeriod = _durationInSeconds / _numberOfSamples;
-    _samples = List.generate(_numberOfSamples, (i) => _function(t + i * _samplingPeriod).toDouble() + noise());
-    final fftSampples = fft(_samples.map((e) => Complex(e, 0)).toList());
-    _fftAmplitudes = fftSampples.map((sample) => sample.abs()).toList().sublist(0, fftSampples.length ~/ 2);
+    _samples = generateSamples(
+      _function,
+      initialX: duration.inMicroseconds / 1E6,
+      xStep: _samplingPeriod,
+      length: _numberOfSamples,
+      noiseLevel: .5,
+    );
+    _fftAmplitudes = fft(_samples.asComplexList()) //
+        .map((sample) => sample.abs())
+        .toList()
+        .sublist(0, _samples.length ~/ 2);
 
     setState(() {}); //only set instate in whole app
   }
