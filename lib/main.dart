@@ -38,6 +38,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     fromExpression: '4*sin(4*pi*t)-2*cos(20*pi*t)',
     withVariable: 't',
   );
+  final minSamplesInPowerOfTwo = 1;
+  final maxSamplesInPowerOfTwo = 12;
   var _numberOfSamples = 128;
   var _durationInSeconds = 3.2;
   var _samplingPeriod = 1.0; //to be updated inside loop
@@ -122,9 +124,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
                 Slider(
                   value: log(_numberOfSamples) / log(2),
-                  divisions: (12 - 6),
-                  min: 6,
-                  max: 12,
+                  divisions: (maxSamplesInPowerOfTwo - minSamplesInPowerOfTwo),
+                  min: minSamplesInPowerOfTwo.toDouble(),
+                  max: maxSamplesInPowerOfTwo.toDouble(),
                   onChanged: (value) => _numberOfSamples = pow(2, value).toInt(),
                 ),
               ],

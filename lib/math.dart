@@ -55,10 +55,10 @@ List<double> generateSamples(
   required double noiseLevel,
   required double initialX,
 }) =>
-    List<double>.generate(
-      length,
-      (i) => function(initialX + i * xStep) + noise() * noiseLevel,
-    );
+    List<double>.generate(length, (i) {
+      final x = initialX - (length - i - 1) * xStep;
+      return function(x) + noise() * noiseLevel;
+    });
 
 extension NumericListExtensions on List<num> {
   List<Complex> asComplexList() => map((e) => Complex(e.toDouble(), 0)).toList();
