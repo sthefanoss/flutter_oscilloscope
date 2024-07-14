@@ -12,7 +12,8 @@ class Chart extends StatelessWidget {
       color: oscilloscopeBackgroundColor,
       child: CustomPaint(
         size: const Size(double.infinity, 125),
-        painter: ChartPainter(data),
+        foregroundPainter: ChartPainter(data),
+        painter: const ChartDivisionsPainter(),
       ),
     );
   }
@@ -52,4 +53,44 @@ class ChartPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
+}
+
+class ChartDivisionsPainter extends CustomPainter {
+  final int verticalBars;
+  final int horizontalBars;
+
+  const ChartDivisionsPainter({this.verticalBars = 8, this.horizontalBars = 4});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = oscilloscopeDivisionsColor
+      ..strokeWidth = .5;
+
+    final double width = size.width;
+    final double height = size.height;
+
+    final double stepX = width / verticalBars;
+    final double stepY = height / horizontalBars;
+
+    for (int i = 1; i < verticalBars; i++) {
+      final double x = i * stepX;
+      canvas.drawLine(Offset(x, 0), Offset(x, height), paint);
+    }
+
+    for (int i = 1; i < horizontalBars; i++) {
+      final double y = i * stepY;
+      canvas.drawLine(Offset(0, y), Offset(width, y), paint);
+    }
+
+    final paintBorder = Paint()
+      ..color = oscilloscopeDivisionsColor
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawRect(Rect.fromLTWH(0, 0, width, height), paintBorder);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

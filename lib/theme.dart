@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const oscilloscopeBackgroundColor = Color(0xFF142618);
 const oscilloscopeActiveColor = Color(0xFF0BFC55);
+const oscilloscopeDivisionsColor = Color(0xFFBDC641);
 
 final oscilloscopeThemeData = ThemeData(
   scaffoldBackgroundColor: const Color(0xffBAA694),
