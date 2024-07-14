@@ -32,8 +32,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  var _function = SingleVariableFunction(
-    fromExpression: '2*sin(4*pi*t)-cos(20*pi*t)',
+  final _function = SingleVariableFunction(
+    fromExpression: '4*sin(4*pi*t)-2*cos(20*pi*t)',
     withVariable: 't',
   );
   var _numberOfSamples = 128;
@@ -57,28 +57,43 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   void _functionGenerator(Duration duration) {
+    final random = Random();
     final t = duration.inMicroseconds / 1E6;
     _samplingPeriod = _durationInSeconds / _numberOfSamples;
-    _samples = List.generate(_numberOfSamples, (i) => _function(t + i * _samplingPeriod).toDouble());
+    _samples = List.generate(
+        _numberOfSamples, (i) => _function(t + i * _samplingPeriod).toDouble() + (random.nextDouble() - 0.5));
     _fftAmplitudes = fft(_samples.map((e) => Complex(e, 0)).toList()).map((e) => e.abs()).toList();
-    setState(() {});
+    setState(() {}); //only set instate in whole app
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Oscilloscope')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FlutterLogo(),
+            SizedBox(width: 16),
+            Text('Oscilloscope'),
+          ],
+        ),
+      ),
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
           Text(
             'Function:',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 4),
-          Math.tex(
-            '\nf(t)=${_function.tex.replaceAll('cdot', '\\cdot')}',
-            textStyle: const TextStyle(fontSize: 20),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Math.tex(
+              '\nf(t)=${_function.tex.replaceAll('cdot', '\\cdot')}',
+              textStyle: const TextStyle(fontSize: 20),
+            ),
           ),
           const SizedBox(height: 32),
           Text(
@@ -86,14 +101,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             style: Theme.of(context).textTheme.titleLarge,
           ),
           Slider(
-            value: log(_durationInSeconds) / log(10),
-            min: -6,
-            max: 6,
-            label: _durationInSeconds.toString(),
-            onChanged: (value) {
-              _durationInSeconds = pow(10, value).toDouble();
-              setState(() {});
-            },
+              value: log(_durationInSeconds) / log(10),
+              min: -6,
+              max: 6,
+              onChanged: (value) => _durationInSeconds = pow(10, value).toDouble()),
+          Text(
+            'Number of samples: $_numberOfSamples',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          Slider(
+            value: log(_numberOfSamples) / log(2),
+            divisions: (12 - 6),
+            min: 6,
+            max: 12,
+            onChanged: (value) => _numberOfSamples = pow(2, value).toInt(),
           ),
           const SizedBox(height: 32),
           Text(
@@ -113,7 +134,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               const Spacer(),
               Text('${NumberFormat.compact().format(1 / _samplingPeriod / 2)}Hz'),
             ],
-          )
+          ),
         ],
       ),
     );
