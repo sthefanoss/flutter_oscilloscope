@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_oscilloscope/theme.dart';
 
 class Chart extends StatelessWidget {
   final List<double> data;
@@ -7,9 +8,12 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: const Size(double.infinity, 125),
-      painter: ChartPainter(data),
+    return Container(
+      color: oscilloscopeBackgroundColor,
+      child: CustomPaint(
+        size: const Size(double.infinity, 125),
+        painter: ChartPainter(data),
+      ),
     );
   }
 }
@@ -22,8 +26,8 @@ class ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xff41FF00)
-      ..strokeWidth = 3.0;
+      ..color = oscilloscopeActiveColor
+      ..strokeWidth = 2.0;
 
     final double width = size.width;
     final double height = size.height;
