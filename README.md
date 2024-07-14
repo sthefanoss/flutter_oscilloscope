@@ -1,16 +1,17 @@
-# flutter_oscilloscope
+# Flutter Oscilloscope
 
-A new Flutter project.
+An example project to experiment with Ticker, a "low level" method for running animations on Flutter.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+![Screenshot](screenshot.png)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Version
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This example was created using Flutter `3.22.1`. It has been tested on iOS Simulator iPhone 15 Pro (iOS 17.5).
+
+## Contact
+
+[Linkedin](https://www.linkedin.com/in/sthefanoss/)
+
+PRs are welcome!
