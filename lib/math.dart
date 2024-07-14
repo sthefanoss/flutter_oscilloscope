@@ -1,5 +1,7 @@
 import 'dart:math';
 
+final _random = Random();
+
 class Complex {
   final double real;
   final double imag;
@@ -12,6 +14,8 @@ class Complex {
       Complex(real * other.real - imag * other.imag, real * other.imag + imag * other.real);
 
   double abs() => sqrt(real * real + imag * imag);
+
+  double arg() => atan2(imag, real);
 
   @override
   String toString() => '($real + ${imag}i)';
@@ -38,3 +42,5 @@ List<Complex> fft(List<Complex> x) {
 
   return result;
 }
+
+double noise() => _random.nextDouble() - 0.5;

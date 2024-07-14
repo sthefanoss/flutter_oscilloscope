@@ -39,8 +39,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   var _numberOfSamples = 128;
   var _durationInSeconds = 3.2;
   var _samplingPeriod = 1.0; //to be updated inside loop
-  List<double> _samples = [1];
-  List<double> _fftAmplitudes = [1];
+  var _samples = <double>[1];
+  var _fftAmplitudes = <double>[1];
   Ticker? _ticker;
 
   @override
@@ -57,12 +57,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   void _functionGenerator(Duration duration) {
-    final random = Random();
     final t = duration.inMicroseconds / 1E6;
     _samplingPeriod = _durationInSeconds / _numberOfSamples;
-    _samples = List.generate(
-        _numberOfSamples, (i) => _function(t + i * _samplingPeriod).toDouble() + (random.nextDouble() - 0.5));
-    _fftAmplitudes = fft(_samples.map((e) => Complex(e, 0)).toList()).map((e) => e.abs()).toList();
+    _samples = List.generate(_numberOfSamples, (i) => _function(t + i * _samplingPeriod).toDouble() + noise());
+    final fftSampples = fft(_samples.map((e) => Complex(e, 0)).toList());
+    _fftAmplitudes = fftSampples.map((sample) => sample.abs()).toList().sublist(0, fftSampples.length ~/ 2);
+
     setState(() {}); //only set instate in whole app
   }
 
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             'FFT:',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          Chart(data: _fftAmplitudes.sublist(0, _fftAmplitudes.length ~/ 2)),
+          Chart(data: _fftAmplitudes),
           Row(
             children: [
               const Text('0Hz'),
